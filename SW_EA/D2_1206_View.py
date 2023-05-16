@@ -1,4 +1,14 @@
 # 1206. [S/W 문제해결 기본] 1일차 - View
+'''
+2개씩 묶어서 비교
+i는 2부터 시작 (인덱스)
+i-2 i-1 <i> i+1 i+2
+
+i를 기준으로 양옆 2개씩 비교
+(i가 i-1보다 크고 and i-2보다 크고) and (i가 i+1보다 크고 and i+2보다 크면)
+-> 조망권 확보 !
+-> 몇개? => i - (i-2, i-1, i+1, i+2 중에서 제일 큰 수) 만큼 확보
+'''
 
 def max_height(before2, before1, after2, after1):
     arr = [before2, before1, after2, after1]
