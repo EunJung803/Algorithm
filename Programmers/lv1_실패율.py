@@ -15,7 +15,7 @@ def solution(N, stages):
 
         stage_arrive = stage_arrive - count_player      # 스테이지에 도달한 플레이어 수 갱신
 
-        if(stage_arrive == 0):      # 만약 스테이지에 도달한 유저가 없는 경우
+        if(len(failed_player) == 0):      # 만약 스테이지에 도달한 유저가 없는 경우
             failed_total.append(0)  # 실패율은 0
         else:
             failed_total.append(len(failed_player) / stage_arrive)      # 실패율 계산 (스테이지에 도달했으나 아직 클리어하지 못한 플레이어의 수 / 스테이지에 도달한 플레이어 수)
