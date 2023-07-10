@@ -1,7 +1,7 @@
 def solution(left, right):
     answer = 0
 
-    ## 약수를 다 찾고 -> 약수의 개수를 알아내고 -> 홀수인지 짝수인지 구별 -> 합할지 더할지 계산
+    ## 약수를 다 찾고 -> 약수의 개수를 알아내고 -> 홀수인지 짝수인지 구별 -> 더할지 뺄지 계산
     start = left
     for i in range(0, right - left + 1):
 
