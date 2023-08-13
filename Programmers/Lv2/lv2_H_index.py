@@ -10,9 +10,10 @@ def solution(citations):
         c_more = 0      # citations[i] 이상 인용된 논문의 개수를 담을 변수
 
         # citations[i]번 이상 인용된 논문의 개수 세기
-        for j in citations:
-            if(j >= citations[i]):
-                c_more += 1
+        # for j in citations:
+        #     if(j >= citations[i]):
+        #         c_more += 1
+        c_more = len(citations[i:])
 
         if(c_more >= citations[i]):     # citations[i]번 이상 인용된 논문이 citations[i]편 이상일 때
             h.append(citations[i])      # -> h는 citations[i]
@@ -22,3 +23,5 @@ def solution(citations):
     answer = max(h)     # 이런 모든 h들 중 최댓값이 정답
 
     return answer
+
+# solution([7,7,7,7,3])
