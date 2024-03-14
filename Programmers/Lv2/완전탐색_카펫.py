@@ -1,3 +1,5 @@
+"""
+# 이전 풀이
 def solution(brown, yellow):
     answer = []
 
@@ -12,6 +14,24 @@ def solution(brown, yellow):
             answer.append(max(yellow_r + 2, yellow_c + 2))
             answer.append(min(yellow_r + 2, yellow_c + 2))
             break
+
+    return answer
+"""
+
+# 240314 풀이
+def solution(brown, yellow):
+    answer = []
+
+    # (b_row-2) * (b_col-2) = y
+
+    for b_row in range(1, brown + 1):
+        b_col = (brown - (b_row * 2)) // 2 + 2
+
+        if (b_row >= b_col):
+            if ((b_row - 2) * (b_col - 2) == yellow):
+                answer.append(b_row)
+                answer.append(b_col)
+                break
 
     return answer
 
