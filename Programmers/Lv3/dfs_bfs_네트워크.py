@@ -1,3 +1,5 @@
+"""
+# 이전 풀이
 from collections import deque
 
 def solution(n, computers):
@@ -29,6 +31,48 @@ def solution(n, computers):
     answer = len(ans)   # 네트워크의 총 개수는 ans 배열에 들어있는 네트워크들의 개수
 
     return answer
+"""
+
+# 240316 풀이
+from collections import deque
+
+def solution(n, computers):
+    answer = 0
+
+    node_graph = [[] for _ in range(n)]
+
+    for i in range(n):
+        for j in range(n):
+            if (computers[i][j] == 1):
+                node_graph[i].append(j)
+
+    def bfs(q, net, visited):
+        while (q):
+            curr = q.popleft()
+
+            for num in node_graph[curr]:
+                if (visited[num] == 0 and len(node_graph[num]) > 0):
+                    q.append(num)
+                    visited[num] = 1
+                    net.append(num)
+
+        return net
+
+    q = deque()
+    ans = []
+
+    for i in range(n):
+        visited = [0 for _ in range(n)]
+        q.append(i)
+        network = bfs(q, [], visited)
+
+        if (sorted(network) not in ans):
+            ans.append(sorted(network))
+
+    answer = len(ans)
+
+    return answer
+
 
 if __name__ == '__main__':
     print(solution(3, [[1, 1, 0], [1, 1, 0], [0, 0, 1]]))       # 2
