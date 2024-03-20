@@ -323,37 +323,38 @@ def solution(tickets):
 ## DFS 깔끔 풀이
 from collections import defaultdict
 
-def dfs(graph, N, key, footprint):
-    print(footprint)
-
-    if len(footprint) == N + 1:
-        return footprint
-
-    for idx, country in enumerate(graph[key]):
-        graph[key].pop(idx)
-
-        tmp = footprint[:]
-        tmp.append(country)
-
-        ret = dfs(graph, N, country, tmp)
-
-        graph[key].insert(idx, country)
-
-        if ret:
-            return ret
-
 
 def solution(tickets):
     answer = []
 
+    # 그래프 생성
     graph = defaultdict(list)
 
-    N = len(tickets)
-    for ticket in tickets:
-        graph[ticket[0]].append(ticket[1])
-        graph[ticket[0]].sort()
+    for i in range(len(tickets)):
+        graph[tickets[i][0]].append(tickets[i][1])
+        graph[tickets[i][0]].sort()
 
-    answer = dfs(graph, N, "ICN", ["ICN"])
+    # DFS 탐색
+    def dfs(tickets, route, N, visited):
+        if (len(route) == N + 1):   # 현재 모든 티켓을 사용한만큼의 길이라면 -> return
+            return route
+
+        for i in range(N):
+            if (visited[i] == 0 and tickets[i][0] == route[-1]):    # i번째 티켓을 사용하지 않았고 and 마지막 도착지가 현재 출발지라서 존재하는 티켓을 사용 가능할 때
+                visited[i] = 1      # 티켓 사용 처리
+                tmp = dfs(tickets, route + [tickets[i][1]], N, visited)     # 갈 수 있는데까지 탐색
+                visited[i] = 0      # 다시 반환
+                if (tmp):
+                    return tmp
+
+    N = len(tickets)
+    visited = [0 for _ in range(N)]
+
+    tickets.sort()
+    r = dfs(tickets, ["ICN"], N, visited)
+
+    print(r)
+    answer = r
 
     return answer
 
