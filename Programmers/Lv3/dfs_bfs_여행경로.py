@@ -1,3 +1,5 @@
+## 이전 풀이
+"""
 # from collections import deque
 from collections import defaultdict
 
@@ -27,6 +29,7 @@ def solution(tickets):
             stack.append(d[top].pop())      # 가장 마지막에 있는 value를 (알파벳 순서가 앞서는 나라) pop해서 stack에 넣어준다
 
     return path[::-1]   # path를 뒤집어주면 정답
+"""
 
 ## DFS 다른 방법
 """
@@ -100,8 +103,267 @@ def solution(tickets):
     return answer
 """
 
+## 240320 풀이
+"""
+from collections import defaultdict
+
+def solution(tickets):
+    answer = []
+
+    graph = defaultdict(list)
+
+    for i in range(len(tickets)):
+        graph[tickets[i][0]].append(tickets[i][1])
+        graph[tickets[i][0]].sort()
+
+    print(graph)
+
+    def dfs(depart, arrive, route):
+        route.append(depart)
+        print(visited)
+
+        if (visited.count(1) == len(visited)):
+            route.append(arrive)
+            return route
+
+        for node in graph[arrive]:
+            if ([arrive, node] not in tickets):
+                return 0
+            if ([arrive, node] in visited and [arrive, node] in tickets):
+                idx = visited.index([arrive, node])
+                if (visited[idx] != 1):
+                    visited[idx] = 1
+                    dfs(arrive, node, route)
+
+        return route
+
+    total_ans = []
+    for i in range(len(tickets)):
+        ans = []
+
+        # tickets를 visited에 복사
+        visited = []
+        for j in range(len(tickets)):
+            visited.append(tickets[j])
+
+        # ICN으로 시작하면 해당 티켓부터 사용해서 탐색 시작
+        if (tickets[i][0] == "ICN"):
+            visited[i] = 1
+
+            ans = dfs(tickets[i][0], tickets[i][1], [])
+
+            print(ans)
+
+            if (visited.count(1) == len(visited) and ans != 0):
+                total_ans.append(ans)
+            print("==")
+
+    print(total_ans)
+    if (total_ans):
+        total_ans.sort()
+        answer = total_ans[0]
+
+    # # BFS
+    # q = deque()
+    # 
+    # def bfs(q):
+    #     route = []
+    #     while(q):
+    #         curr = q.popleft()
+    #         depart = curr[0]
+    #         arrive = curr[1]
+    # 
+    #         # if(depart == "ICN" and len(route) == 0):
+    #         route.append(depart)
+    #         route.append(arrive)
+    # 
+    #         for node in graph[arrive]:
+    #             if([arrive, node] in tickets):
+    #                 idx = tickets.index([arrive, node])
+    #                 if(visited[idx] != 1):
+    #                     q.append([arrive, node])
+    #                     print([arrive, node])
+    #                     visited[idx] = 1
+    #     return route
+    # 
+    # total = []
+    # for i in range(len(tickets)):
+    #     ans = []
+    #     # visited = [0 for _ in range(len(tickets))]
+    #     visited = []
+    #     for j in range(len(tickets)):
+    #         visited.append(tickets[j])
+    #     if(tickets[i][0] == "ICN"):
+    #         q.append(tickets[i])      # ["ICN", "SFO"], i=0
+    #         visited[i] = 1
+    # 
+    #         ans = bfs(q)
+    # 
+    #     if(ans):
+    #         total.append(ans)
+    # 
+    # 
+    # print(total)
+    # total.sort()
+    # print(total)
+    # answer = total[0]
+
+    return answer
+"""
+"""
+from collections import defaultdict
+
+
+def solution(tickets):
+    answer = []
+
+    graph = defaultdict(list)
+
+    for i in range(len(tickets)):
+        graph[tickets[i][0]].append(tickets[i][1])
+        graph[tickets[i][0]].sort()
+
+    # print(graph)
+
+    def dfs(depart, arrive, route):
+        route.append(depart)
+        # print(visited)
+
+        if (visited.count(1) == len(visited)):
+            route.append(arrive)
+            return route
+
+        for node in graph[arrive]:
+            if ([arrive, node] not in tickets):
+                return []
+
+        for node in graph[arrive]:
+            if ([arrive, node] in visited and [arrive, node] in tickets):
+                idx = visited.index([arrive, node])
+                if (visited[idx] != 1):
+                    visited[idx] = 1
+                    dfs(arrive, node, route)
+        return []
+
+    total_ans = []
+    for i in range(len(tickets)):
+        ans = []
+
+        # tickets를 visited에 복사
+        visited = []
+        for j in range(len(tickets)):
+            visited.append(tickets[j])
+
+        # ICN으로 시작하면 해당 티켓부터 사용해서 탐색 시작
+        if (tickets[i][0] == "ICN"):
+            visited[i] = 1
+
+            ans = dfs(tickets[i][0], tickets[i][1], [])
+
+            # print(ans)
+
+            if (visited.count(1) == len(visited) and ans != 0):
+                total_ans.append(ans)
+            # print("==")
+
+    # print(total_ans)
+    if (total_ans):
+        total_ans.sort()
+        answer = total_ans[0]
+
+    return answer
+"""
+
+## DFS+백트래킹
+"""
+from collections import defaultdict
+import copy
+
+def solution(tickets):
+    answer = []
+
+    graph = defaultdict(list)
+
+    for i in range(len(tickets)):
+        graph[tickets[i][0]].append(tickets[i][1])
+        graph[tickets[i][0]].sort()
+
+    print(graph)
+
+    def dfs(depart, route):
+        route.append(depart)
+
+        for i in range(len(graph[depart])):
+            if (graph[depart][i] == 0):  # 방문한 곳이라면 건너뛰기
+                continue
+            else:
+                arrive = graph[depart][i]  # 해당 출발지에서 갈 수 있는 도착지
+                graph[depart][i] = 0  # 방문 처리
+
+                tmp = dfs(arrive, route)  # 해당 루트로 갈수있는 곳까지 가보기
+
+                if (len(tmp) == len(tickets) + 1):  # 만약 모든 티켓을 사용했다면 -> 일단 result에 추가
+                    result.append(copy.deepcopy(tmp))
+
+                # 백트래킹 (되돌려놓기, 다음 루트를 위해)
+                route.pop()
+                graph[depart][i] = arrive
+
+        return route
+
+    result = []
+    dfs("ICN", [])
+
+    result.sort()
+    answer = result[0]
+
+    return answer
+"""
+
+## DFS 깔끔 풀이
+from collections import defaultdict
+
+def dfs(graph, N, key, footprint):
+    print(footprint)
+
+    if len(footprint) == N + 1:
+        return footprint
+
+    for idx, country in enumerate(graph[key]):
+        graph[key].pop(idx)
+
+        tmp = footprint[:]
+        tmp.append(country)
+
+        ret = dfs(graph, N, country, tmp)
+
+        graph[key].insert(idx, country)
+
+        if ret:
+            return ret
+
+
+def solution(tickets):
+    answer = []
+
+    graph = defaultdict(list)
+
+    N = len(tickets)
+    for ticket in tickets:
+        graph[ticket[0]].append(ticket[1])
+        graph[ticket[0]].sort()
+
+    answer = dfs(graph, N, "ICN", ["ICN"])
+
+    return answer
+
+
 if __name__ == '__main__':
     print(solution([["ICN", "JFK"], ["HND", "IAD"], ["JFK", "HND"]]))
     # ["ICN", "JFK", "HND", "IAD"]
-    print(solution([["ICN", "SFO"], ["ICN", "ATL"], ["SFO", "ATL"], ["ATL", "ICN"], ["ATL", "SFO"]]))
+    # print(solution([["ICN", "SFO"], ["ICN", "ATL"], ["SFO", "ATL"], ["ATL", "ICN"], ["ATL", "SFO"]]))
     # ["ICN", "ATL", "ICN", "SFO", "ATL", "SFO"]
+    # print(solution([["ICN", "BOO"], ["ICN", "COO"], ["COO", "DOO"], ["DOO", "COO"], ["BOO", "DOO"], ["DOO", "BOO"], ["BOO", "ICN"], ["COO", "BOO"]]))
+    # ["ICN", "BOO", "DOO", "BOO", "ICN", "COO", "DOO", "COO", "BOO"]
+    # print(solution([["ICN", "AAA"], ["ICN", "CCC"], ["CCC", "DDD"], ["AAA", "BBB"], ["AAA", "BBB"], ["DDD", "ICN"], ["BBB", "AAA"]]))
+    # ["ICN", "CCC", "DDD", "ICN", "AAA", "BBB", "AAA", "BBB"]
